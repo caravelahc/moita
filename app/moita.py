@@ -5,4 +5,6 @@ import pymongo
 app = flask.Flask(__name__)
 app.config.from_object(config)
 
-db = pymongo.MongoClient()
+connection = pymongo.MongoClient()
+database = connection[app.config['DATABASE']]
+timetables = database.timetables
