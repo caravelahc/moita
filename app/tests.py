@@ -7,6 +7,10 @@ class MoitaTestCase(unittest.TestCase):
         moita.app.config['TESTING'] = True
         self.app = moita.app.test_client()
 
+    def test_load_invalid_timetable(self):
+        result = self.app.get('/load/123')
+        assert result.status_code == 404
+
     def tearDown(self):
         moita.timetables.drop()
 
