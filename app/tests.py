@@ -35,6 +35,7 @@ class MoitaTestCase(unittest.TestCase):
         self.assertEqual(200, result.status_code)
 
         # assert previously inserted data is unmodified
+        del payload['_id']  # returned data should not contain _id
         self.assertDictEqual(payload, json.loads(result.data.decode('utf-8')))
 
     def test_save_timetable(self):
