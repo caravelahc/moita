@@ -1,5 +1,7 @@
 import unittest
+
 from app import moita
+
 
 class MoitaTestCase(unittest.TestCase):
     def setUp(self):
@@ -14,10 +16,12 @@ class MoitaTestCase(unittest.TestCase):
     def tearDown(self):
         moita.timetables.drop()
 
+
 def run_tests():
     runner = unittest.TextTestRunner()
     suite = unittest.TestLoader().loadTestsFromTestCase(MoitaTestCase)
     runner.run(suite)
+
 
 if __name__ == '__main__':
     run_tests()
