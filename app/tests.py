@@ -37,6 +37,23 @@ class MoitaTestCase(unittest.TestCase):
         # assert previously inserted data is unmodified
         self.assertDictEqual(payload, json.loads(result.data.decode('utf-8')))
 
+    def test_save_timetable(self):
+        # use a different _id from above!
+        payload = {
+            'success': True,
+        }
+
+        previous = moita.timetables.count()
+        result = self.app.put('/store/456')
+
+        # assert that request was completed and data was stored exactly once
+        self.assertEqual(204, result.status_code)
+        self.assertEqual(previous + 1, moita.timetables.count())
+
+        # assert that data in the database is the same that was sent
+        data = moita.timetables.find_one(456)
+        self.assertDictEqual(payload, data)
+
     def tearDown(self):
         moita.timetables.drop()
 
