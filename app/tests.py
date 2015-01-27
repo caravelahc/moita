@@ -25,9 +25,9 @@ class MoitaTestCase(unittest.TestCase):
         }
 
         # this and the next assertion assert that no duplicates were inserted
-        self.assertEqual(0, moita.timetables.count())
+        previous = moita.timetables.count()
         moita.timetables.insert(payload)
-        self.assertEqual(1, moita.timetables.count())
+        self.assertEqual(previous + 1, moita.timetables.count())
 
         result = self.app.get('/load/%s' % payload['_id'])
 
