@@ -21,7 +21,7 @@ class MoitaTestCase(unittest.TestCase):
         # the future this test needs to be rewritten
         payload = {
             '_id': '123',
-            'success': True,
+            'success': 'yes',
         }
 
         # this and the next assertion assert that no duplicates were inserted
@@ -41,7 +41,7 @@ class MoitaTestCase(unittest.TestCase):
     def test_save_timetable(self):
         # use a different _id from above!
         payload = {
-            'success': True,
+            'success': 'yes',
         }
 
         previous = moita.timetables.count()
