@@ -12,7 +12,7 @@ app.config.from_object(config)
 
 try:
     connection = pymongo.MongoClient()
-except pymongo.errors.ConnectionFailure:
+except pymongo.errors.ConnectionFailure: # pragma: no cover
     print('Error %d: connection to the database refused.' % errno.ECONNREFUSED,
           file=sys.stderr)
     sys.exit(errno.ECONNREFUSED)
