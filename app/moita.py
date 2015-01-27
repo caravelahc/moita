@@ -1,5 +1,6 @@
 import errno
 import sys
+from bson import objectid
 
 import config
 
@@ -28,4 +29,14 @@ def load_timetable(identifier):
     if payload is None:
         flask.abort(404)
 
+    del payload['_id']
     return flask.jsonify(**payload), 200
+
+@app.route('/store/<identifier>', methods=['PUT'])
+def store_timetable(identifier):
+    data = flask.request.form.to_dict()
+    data['_id'] = identifier
+
+    timetables.insert(data)
+
+    return '', 204
