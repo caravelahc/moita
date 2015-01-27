@@ -24,4 +24,8 @@ timetables = database.timetables
 @app.route('/load/<identifier>', methods=['GET'])
 def load_timetable(identifier):
     payload = timetables.find_one(identifier)
+
+    if payload is None:
+        flask.abort(404)
+
     return flask.jsonify(**payload), 200
