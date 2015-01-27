@@ -12,7 +12,7 @@ class MoitaTestCase(unittest.TestCase):
 
     def test_load_invalid_timetable(self):
         result = self.app.get('/load/123')
-        #self.assertEqual(404, result.status_code)
+        self.assertEqual(404, result.status_code)
 
     def test_load_valid_timetable(self):
         # since there is not really constraints in the data (i.e. if user breaks
