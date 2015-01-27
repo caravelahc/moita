@@ -35,7 +35,7 @@ class MoitaTestCase(unittest.TestCase):
         self.assertEqual(200, result.status_code)
 
         # assert previously inserted data is unmodified
-        self.assertEqual(payload, result.data)
+        self.assertDictEqual(payload, json.loads(result.data.decode('utf-8')))
 
     def tearDown(self):
         moita.timetables.drop()
