@@ -44,14 +44,14 @@ class MoitaTestCase(unittest.TestCase):
         }
 
         previous = moita.timetables.count()
-        result = self.app.put('/store/456')
+        result = self.app.put('/store/456', data=payload)
 
         # assert that request was completed and data was stored exactly once
         self.assertEqual(204, result.status_code)
         self.assertEqual(previous + 1, moita.timetables.count())
 
         # assert that data in the database is the same that was sent
-        data = moita.timetables.find_one(456)
+        data = moita.timetables.find_one('456')
         self.assertDictEqual(payload, data)
 
     def tearDown(self):
