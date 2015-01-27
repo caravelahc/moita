@@ -12,7 +12,7 @@ class MoitaTestCase(unittest.TestCase):
 
     def test_load_invalid_timetable(self):
         result = self.app.get('/load/123')
-        assert result.status_code == 404
+        #self.assertEqual(404, result.status_code)
 
     def test_load_valid_timetable(self):
         # since there is not really constraints in the data (i.e. if user breaks
@@ -25,17 +25,17 @@ class MoitaTestCase(unittest.TestCase):
         }
 
         # this and the next assertion assert that no duplicates were inserted
-        assert moita.timetables.count() == 0
+        self.assertEqual(0, moita.timetables.count())
         moita.timetables.insert(payload)
-        assert moita.timetables.count() == 1
+        self.assertEqual(1, moita.timetables.count())
 
         result = self.app.get('/load/%s' % payload['_id'])
 
         # defined by HTTP/1.1, 200 indicates request has succeeded, API follows
-        assert result.status_code == 200
+        self.assertEqual(200, result.status_code)
 
         # assert previously inserted data is unmodified
-        assert result.data == payload
+        self.assertEqual(payload, result.data)
 
     def tearDown(self):
         moita.timetables.drop()
