@@ -53,6 +53,7 @@ class MoitaTestCase(unittest.TestCase):
 
         # assert that data in the database is the same that was sent
         data = moita.timetables.find_one('456')
+        del data['_id']
         self.assertDictEqual(payload, data)
 
     def tearDown(self):
