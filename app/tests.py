@@ -56,6 +56,26 @@ class MoitaTestCase(unittest.TestCase):
         del data['_id']
         self.assertDictEqual(payload, data)
 
+    def test_replace_timetable(self):
+        payload = {
+            'success': 'no',
+        }
+
+        previous = moita.timetables.count()
+        self.app.put('/store/789', data=payload)
+        self.assertEqual(previous + 1, moita.timetables.count())
+
+        payload = {
+            'success': 'yes'
+        }
+        result = self.app.put('/store/789', data=payload)
+        self.assertEqual(204, result.status_code)
+        self.assertEqual(previous + 1, moita.timetables.count())
+
+        data = moita.timetables.find_one('789')
+        del data['_id']
+        self.assertDictEqual(payload, data)
+
     def tearDown(self):
         moita.timetables.drop()
 
