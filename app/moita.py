@@ -36,6 +36,6 @@ def store_timetable(identifier):
     data = flask.request.form.to_dict()
     data['_id'] = identifier
 
-    timetables.insert(data)
+    timetables.save(data)
 
     return '', 204
