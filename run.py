@@ -1,9 +1,8 @@
 #!/usr/bin/env python
-import argparse
-
-from app import app
+from app import moita
 
 if __name__ == '__main__':
+    import argparse
     parser = argparse.ArgumentParser()
     parser.add_argument('-t', '--test', help='run tests only',
                         action='store_true', dest='test', default=False)
@@ -15,4 +14,8 @@ if __name__ == '__main__':
         tests.run_tests()
 
     else:
-        app.run()
+        application = moita.create_app()
+        application.run()
+
+else:
+    application = moita.create_app()

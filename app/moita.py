@@ -1,13 +1,9 @@
 import errno
 import sys
 
-import config
 import flask
 import pymongo
 import pymongo.errors
-
-app = flask.Flask(__name__)
-app.config.from_object(config)
 
 try:
     connection = pymongo.MongoClient()
@@ -16,13 +12,13 @@ except pymongo.errors.ConnectionFailure:  # pragma: no cover
           file=sys.stderr)
     sys.exit(errno.ECONNREFUSED)
 
-database = connection[app.config['DATABASE']]
-timetables = database.timetables
+map = flask.Blueprint('moita', __name__)
 
 
-@app.route('/load/<identifier>', methods=['GET'])
+@map.route('/load/<identifier>', methods=['GET'])
 def load_timetable(identifier):
-    payload = timetables.find_one(identifier)
+    payload = connection[
+        flask.current_app.config['DATABASE']].timetables.find_one(identifier)
 
     if payload is None:
         flask.abort(404)
@@ -31,11 +27,24 @@ def load_timetable(identifier):
     return flask.jsonify(**payload), 200
 
 
-@app.route('/store/<identifier>', methods=['PUT'])
+@map.route('/store/<identifier>', methods=['PUT'])
 def store_timetable(identifier):
     data = flask.request.form.to_dict()
     data['_id'] = identifier
 
-    timetables.save(data)
+    connection[flask.current_app.config['DATABASE']].timetables.save(data)
 
     return '', 204
+
+
+def create_app(**kwargs):
+    app = flask.Flask(__name__)
+
+    import config
+
+    app.config.from_object(config)
+    app.config.update(kwargs)
+
+    app.register_blueprint(map, url_prefix=app.config.get('APPLICATION_ROOT'))
+
+    return app

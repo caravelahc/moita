@@ -1,3 +1,4 @@
+import config
 import json
 import unittest
 
@@ -6,9 +7,14 @@ from app import moita
 
 class MoitaTestCase(unittest.TestCase):
     def setUp(self):
-        moita.timetables = moita.database.timetables_temporary
-        moita.app.config['TESTING'] = True
-        self.app = moita.app.test_client()
+        app = moita.create_app(**{
+            'APPLICATION_ROOT': '',
+            'DATABASE': '_'.join([config.DATABASE, 'temporary']),
+            'TESTING': True,
+        })
+
+        self.app = app.test_client()
+        self.database = moita.connection[app.config.get('DATABASE')].timetables
 
     def test_load_invalid_timetable(self):
         result = self.app.get('/load/123')
@@ -25,9 +31,9 @@ class MoitaTestCase(unittest.TestCase):
         }
 
         # this and the next assertion assert that no duplicates were inserted
-        previous = moita.timetables.count()
-        moita.timetables.insert(payload)
-        self.assertEqual(previous + 1, moita.timetables.count())
+        previous = self.database.count()
+        self.database.insert(payload)
+        self.assertEqual(previous + 1, self.database.count())
 
         result = self.app.get('/load/%s' % payload['_id'])
 
@@ -44,15 +50,15 @@ class MoitaTestCase(unittest.TestCase):
             'success': 'yes',
         }
 
-        previous = moita.timetables.count()
+        previous = self.database.count()
         result = self.app.put('/store/456', data=payload)
 
         # assert that request was completed and data was stored exactly once
         self.assertEqual(204, result.status_code)
-        self.assertEqual(previous + 1, moita.timetables.count())
+        self.assertEqual(previous + 1, self.database.count())
 
         # assert that data in the database is the same that was sent
-        data = moita.timetables.find_one('456')
+        data = self.database.find_one('456')
         del data['_id']
         self.assertDictEqual(payload, data)
 
@@ -61,23 +67,23 @@ class MoitaTestCase(unittest.TestCase):
             'success': 'no',
         }
 
-        previous = moita.timetables.count()
+        previous = self.database.count()
         self.app.put('/store/789', data=payload)
-        self.assertEqual(previous + 1, moita.timetables.count())
+        self.assertEqual(previous + 1, self.database.count())
 
         payload = {
             'success': 'yes'
         }
         result = self.app.put('/store/789', data=payload)
         self.assertEqual(204, result.status_code)
-        self.assertEqual(previous + 1, moita.timetables.count())
+        self.assertEqual(previous + 1, self.database.count())
 
-        data = moita.timetables.find_one('789')
+        data = self.database.find_one('789')
         del data['_id']
         self.assertDictEqual(payload, data)
 
     def tearDown(self):
-        moita.timetables.drop()
+        self.database.drop()
 
 
 def run_tests():
