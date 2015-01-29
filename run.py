@@ -16,6 +16,3 @@ if __name__ == '__main__':
     else:
         application = moita.create_app()
         application.run()
-
-else:
-    application = moita.create_app()
