@@ -59,7 +59,7 @@ Você pode utilizar uma porta diferente ou até mesmo um UNIX socket. Leia a
 do uWSGI para maiores informações.
 
 No Nginx, configure seu server da seguinte forma:
-```nginx configuration file
+```
 location / {
     try_files $uri @app;
 }
