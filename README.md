@@ -1,10 +1,10 @@
 Introdução
 ==========
 O **MOITA** é um servidor de documentos desenvolvido para aprimorar o sistema
-[**CAPIM**](ramiropolla/capim), que por sua vez foi feito para substituir o
-**GRAMA**, cujos objetivos são ajudar os alunos a organizar os seus horários de
-aula com um cronograma intuitivo e simplificado que permite combinar matérias de
-diversas formas, de forma interativa.
+[**CAPIM**](https://github.com/ramiropolla/capim), que por sua vez foi feito
+para substituir o **GRAMA**, cujos objetivos são ajudar os alunos a organizar os
+seus horários de aula com um cronograma intuitivo e simplificado que permite
+combinar matérias de diversas formas, de forma interativa.
 
 Você pode ler a história e a motivação do CAPIM no repositório indicado pelo
 link acima.
@@ -19,13 +19,12 @@ dados de forma simples.
 
 Detalhes
 ========
-Construído do zero, o MOITA utiliza-se da licença
-[Affero GPL](https://github.com/ranisalt/moita/blob/master/LICENSE).
+Construído do zero, o MOITA utiliza-se da licença [Affero GPL](LICENSE).
 
 O MOITA utiliza apenas Python 3, e é construído com o framework
-[Flask](mitsuhiko/flask), além de utilizar a extensão
-[pymongo](mongodb/mongo-python-driver) para manipular o banco de dados MongoDB,
-caso seja utilizado.
+[Flask](https://github.com/mitsuhiko/flask), além de utilizar a extensão
+[pymongo](https://github.com/mongodb/mongo-python-driver) para manipular o banco
+de dados MongoDB, caso seja utilizado.
 
 Deploy
 ======
