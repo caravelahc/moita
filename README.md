@@ -48,11 +48,11 @@ O Flask segue a [PEP-333](https://www.python.org/dev/peps/pep-0333/), ou seja,
 subir um servidor. É simples:
 
 ```sh
-uwsgi -w run:app -s :5000
+uwsgi -w wsgi -s :5000
 ```
 Ou, de forma mais explícita:
 ```sh
-uwsgi --wsgi-file run.py --callable app --uwsgi-socket :5000
+uwsgi --wsgi-file wsgi.py --uwsgi-socket :5000
 ```
 Você pode utilizar uma porta diferente ou até mesmo um UNIX socket. Leia a
 [documentação](http://uwsgi-docs.readthedocs.org/en/latest/WSGIquickstart.html)
