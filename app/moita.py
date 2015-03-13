@@ -37,23 +37,6 @@ def store_timetable(identifier):
     return '', 204
 
 
-@map.route('/ical/<identifier>', methods=['POST'])
-def reflect_ical(identifier):
-    # data comes as bytes and split, needs to be decoded then joined
-    data = ''.join(flask.request.get_data().decode('UTF-8'))
-
-    response = flask.make_response(data)
-    headers = {
-        'Content-Type': 'text/calendar',
-        'Content-Disposition': 'attachment; filename=%s.ics' % (identifier, ),
-    }
-
-    for k in headers:
-        response.headers.set(k, headers[k])
-
-    return response, 200
-
-
 def create_app(**kwargs):
     app = flask.Flask(__name__)
 
