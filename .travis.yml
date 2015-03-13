@@ -1,0 +1,16 @@
+language: python
+
+# support for Python 2 is not wanted
+python:
+    - "3.2"
+    - "3.3"
+    - "3.4"
+    - "pypy3"
+
+# install dependencies
+install:
+    - python setup.py develop
+
+# run tests
+script:
+    - python app/tests.py
