@@ -3,7 +3,6 @@ services: mongodb
 
 # support for Python 2 is not wanted
 python:
-    - "3.2"
     - "3.3"
     - "3.4"
     - "pypy3"
