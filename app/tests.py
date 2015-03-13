@@ -21,10 +21,10 @@ class MoitaTestCase(unittest.TestCase):
         self.assertEqual(404, result.status_code)
 
     def test_load_valid_timetable(self):
-        # since there is not really constraints in the data (i.e. if user breaks
-        # something, it's okay to fail at the front end) we just check if the
-        # endpoint correctly inserts (correct _id and data). if this changes in
-        # the future this test needs to be rewritten
+        # since there is not really constraints in the data (i.e. if user
+        # breaks something, it's okay to fail at the front end) we just check
+        # if the endpoint correctly inserts (correct _id and data). if this
+        # changes in the future this test needs to be rewritten
         payload = {
             '_id': '123',
             'success': 'yes',
