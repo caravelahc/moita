@@ -88,15 +88,15 @@ class MoitaTestCase(unittest.TestCase):
         with open('sample.ics', 'r') as f:
             payload = f.read()
 
-        r = self.app.post('/ical/903', data=payload)
+        result = self.app.post('/ical/903', data=payload)
 
         # this mimetype is recommended for iCalendar
-        self.assertEqual('text/calendar', r.headers['Content-Type'])
+        self.assertEqual('text/calendar', result.headers['Content-Type'])
         self.assertEqual('attachment; filename=903.ics',
-                         r.headers['Content-Disposition'])
+                         result.headers['Content-Disposition'])
 
         # the data comes as bytes, and needs to be decoded
-        self.assertEqual(payload, r.data.decode('UTF-8'))
+        self.assertEqual(payload, result.data.decode('UTF-8'))
 
     def tearDown(self):
         self.database.drop()
