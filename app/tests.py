@@ -82,6 +82,22 @@ class MoitaTestCase(unittest.TestCase):
         del data['_id']
         self.assertDictEqual(payload, data)
 
+    def test_ping_icalendar(self):
+        # the payload is a real example extracted from ramiropolla/capim and
+        # it is rather big, so I opted to read it from a sample file
+        with open('sample.ics', 'r') as f:
+            payload = f.read()
+
+        r = self.app.post('/ical/903', data=payload)
+
+        # this mimetype is recommended for iCalendar
+        self.assertEqual('text/calendar', r.headers['Content-Type'])
+        self.assertEqual('attachment; filename=903.ics',
+                         r.headers['Content-Disposition'])
+
+        # the data comes as bytes, and needs to be decoded
+        self.assertEqual(payload, r.data.decode('UTF-8'))
+
     def tearDown(self):
         self.database.drop()
 
