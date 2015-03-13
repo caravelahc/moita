@@ -1,3 +1,5 @@
+# [![Build status][travis-image]][travis-url] [![Coverage status][coveralls-image]][coveralls-url] [![Code health][landscape-image]][landscape-url]
+
 Introdução
 ==========
 O **MOITA** é um servidor de documentos desenvolvido para aprimorar o sistema
@@ -69,3 +71,10 @@ location @app {
 }
 ```
 Recarregue o Nginx e tudo deve funcionar :)
+
+[travis-image]: https://travis-ci.org/ranisalt/moita.svg?branch=master
+[travis-url]: https://travis-ci.org/ranisalt/moita
+[coveralls-image]: https://coveralls.io/repos/ranisalt/moita/badge.svg?branch=master
+[coveralls-url]: https://coveralls.io/r/ranisalt/moita
+[landscape-image]: https://landscape.io/github/ranisalt/moita/master/landscape.svg
+[landscape-url]: https://landscape.io/github/ranisalt/moita/master
