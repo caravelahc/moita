@@ -89,6 +89,7 @@ class MoitaTestCase(unittest.TestCase):
             payload = f.read()
 
         result = self.app.post('/ical/903', data=payload)
+        self.assertEqual(200, result.status_code)
 
         # this mimetype is recommended for iCalendar
         self.assertEqual('text/calendar', result.headers['Content-Type'])
