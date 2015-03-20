@@ -7,7 +7,7 @@ def read(file):
 
 setuptools.setup(
     name='MOITA',
-    version='0.1.0',
+    version='1.0.0',
     description='Matrícula Otimizada/Iteração de Todas as Alternativas',
     url='https://github.com/ranisalt/moita',
     author='Ranieri Althoff',
