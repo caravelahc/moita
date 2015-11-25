@@ -1,5 +1,4 @@
 language: python
-services: mongodb
 
 # support for Python 2 is not wanted
 python:
