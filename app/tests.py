@@ -7,9 +7,11 @@ from app import moita
 
 
 class MoitaTestCase(unittest.TestCase):
-    def setUp(self):
-        self.bucket = moita.s3.create_bucket('matrufsc_test')
+    @classmethod
+    def setUpClass(cls):
+        cls.bucket = moita.s3.create_bucket('matrufsc_test')
 
+    def setUp(self):
         app = moita.create_app(**{
             'APPLICATION_ROOT': '',
             'AWS_BUCKET_NAME': 'matrufsc_test',
@@ -81,8 +83,10 @@ class MoitaTestCase(unittest.TestCase):
         data = moita.download(self.bucket, '789')
         self.assertDictEqual(payload, data)
 
-    def tearDown(self):
-        for key in self.bucket.list():
+    @classmethod
+    def tearDownClass(cls):
+        # perform bucket cleanup
+        for key in cls.bucket.list():
             key.delete()
         moita.s3.delete_bucket('matrufsc_test')
 
