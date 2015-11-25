@@ -39,6 +39,11 @@ def upload(bucket, filename, filedata):
     return key
 
 
+@app.before_request
+def before_request():
+    flask.g.bucket = s3.get_bucket(app.config['AWS_BUCKET_NAME'])
+
+
 @map.route('/load/<identifier>', methods=['GET'])
 def load_timetable(identifier):
     payload = download(flask.g.bucket, identifier)
