@@ -1,6 +1,4 @@
 import config
-import errno
-import sys
 
 import boto
 import boto.exception
@@ -11,7 +9,7 @@ import json
 app = flask.Flask(__name__)
 app.config.from_object(config)
 
-map = flask.Blueprint('moita', __name__)
+routes = flask.Blueprint('moita', __name__)
 
 s3 = boto.connect_s3()
 
@@ -44,7 +42,7 @@ def before_request():
     flask.g.bucket = s3.get_bucket(app.config['AWS_BUCKET_NAME'])
 
 
-@map.route('/load/<identifier>', methods=['GET'])
+@routes.route('/load/<identifier>', methods=['GET'])
 def load_timetable(identifier):
     payload = download(flask.g.bucket, identifier)
 
@@ -54,7 +52,7 @@ def load_timetable(identifier):
     return flask.jsonify(**payload), 200
 
 
-@map.route('/store/<identifier>', methods=['PUT'])
+@routes.route('/store/<identifier>', methods=['PUT'])
 def store_timetable(identifier):
     data = flask.request.form.to_dict()
     upload(flask.g.bucket, identifier, data)
@@ -64,6 +62,6 @@ def store_timetable(identifier):
 
 def create_app(**kwargs):
     app.config.update(kwargs)
-    app.register_blueprint(map, url_prefix=app.config.get('APPLICATION_ROOT'))
+    app.register_blueprint(routes, url_prefix=app.config.get('APPLICATION_ROOT'))
 
     return app
