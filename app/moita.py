@@ -3,7 +3,7 @@ import errno
 import sys
 
 import boto
-import boto.s3.connection as s3connection
+import boto.exception
 import boto.s3.key as s3key
 import flask
 import json
@@ -13,8 +13,7 @@ app.config.from_object(config)
 
 map = flask.Blueprint('moita', __name__)
 
-s3 = s3connection.S3Connection()
-bucket = s3.get_bucket(app.config['AWS_BUCKET_NAME'])
+s3 = boto.connect_s3()
 
 
 def download(filename):
@@ -54,10 +53,8 @@ def store_timetable(identifier):
     return '', 204
 
 
-app.register_blueprint(map, url_prefix=app.config.get('APPLICATION_ROOT'))
-
-
 def create_app(**kwargs):
     app.config.update(kwargs)
+    app.register_blueprint(map, url_prefix=app.config.get('APPLICATION_ROOT'))
 
     return app
