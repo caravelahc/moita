@@ -28,22 +28,21 @@ class MoitaTestCase(unittest.TestCase):
         # if the endpoint correctly inserts (correct _id and data). if this
         # changes in the future this test needs to be rewritten
         payload = {
-            '_id': '123',
             'success': 'yes',
         }
 
         # this and the next assertion assert that no duplicates were inserted
-        previous = self.database.count()
-        self.database.insert(payload)
-        self.assertEqual(previous + 1, self.database.count())
+        previous = len(list(self.bucket.list()))
+        moita.upload(self.bucket, '123', payload)
+        next = len(list(self.bucket.list()))
+        self.assertEqual(previous + 1, next)
 
-        result = self.app.get('/load/%s' % payload['_id'])
+        result = self.app.get('/load/123')
 
         # defined by HTTP/1.1, 200 indicates request has succeeded, API follows
         self.assertEqual(200, result.status_code)
 
         # assert previously inserted data is unmodified
-        del payload['_id']  # returned data should not contain _id
         self.assertDictEqual(payload, json.loads(result.data.decode('utf-8')))
 
     def test_save_timetable(self):
@@ -52,16 +51,15 @@ class MoitaTestCase(unittest.TestCase):
             'success': 'yes',
         }
 
-        previous = self.database.count()
+        previous = len(list(self.bucket.list()))
         result = self.app.put('/store/456', data=payload)
 
         # assert that request was completed and data was stored exactly once
         self.assertEqual(204, result.status_code)
-        self.assertEqual(previous + 1, self.database.count())
+        self.assertEqual(previous + 1, len(list(self.bucket.list())))
 
         # assert that data in the database is the same that was sent
-        data = self.database.find_one('456')
-        del data['_id']
+        data = moita.download(self.bucket, '456')
         self.assertDictEqual(payload, data)
 
     def test_replace_timetable(self):
@@ -69,19 +67,18 @@ class MoitaTestCase(unittest.TestCase):
             'success': 'no',
         }
 
-        previous = self.database.count()
+        previous = len(list(self.bucket.list()))
         self.app.put('/store/789', data=payload)
-        self.assertEqual(previous + 1, self.database.count())
+        self.assertEqual(previous + 1, len(list(self.bucket.list())))
 
         payload = {
             'success': 'yes'
         }
         result = self.app.put('/store/789', data=payload)
         self.assertEqual(204, result.status_code)
-        self.assertEqual(previous + 1, self.database.count())
+        self.assertEqual(previous + 1, len(list(self.bucket.list())))
 
-        data = self.database.find_one('789')
-        del data['_id']
+        data = moita.download(self.bucket, '789')
         self.assertDictEqual(payload, data)
 
     def tearDown(self):
