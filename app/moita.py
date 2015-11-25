@@ -2,6 +2,7 @@ import config
 
 import boto
 import boto.exception
+import boto.s3.bucket as s3bucket
 import boto.s3.key as s3key
 import flask
 import json
@@ -14,11 +15,11 @@ routes = flask.Blueprint('moita', __name__)
 s3 = boto.connect_s3()
 
 
-def make_key(filename):
+def make_key(filename: str) -> str:
     return '%s.json' % (filename,)
 
 
-def download(bucket, filename):
+def download(bucket: s3bucket.Bucket, filename: str) -> str:
     key = bucket.get_key(make_key(filename))
 
     if key is not None:
@@ -28,7 +29,7 @@ def download(bucket, filename):
     return None
 
 
-def upload(bucket, filename, filedata):
+def upload(bucket: s3bucket.Bucket, filename: str, filedata) -> s3key.Key:
     key = s3key.Key(bucket)
     key.key = make_key(filename)
     key.set_contents_from_string(json.dumps(filedata), headers={
@@ -43,7 +44,7 @@ def before_request():
 
 
 @routes.route('/load/<identifier>', methods=['GET'])
-def load_timetable(identifier):
+def load_timetable(identifier) -> (str, int):
     payload = download(flask.g.bucket, identifier)
 
     if payload is None:
@@ -53,14 +54,14 @@ def load_timetable(identifier):
 
 
 @routes.route('/store/<identifier>', methods=['PUT'])
-def store_timetable(identifier):
+def store_timetable(identifier) -> (str, int):
     data = flask.request.form.to_dict()
     upload(flask.g.bucket, identifier, data)
 
     return '', 204
 
 
-def create_app(**kwargs):
+def create_app(**kwargs) -> flask.Flask:
     app.config.update(kwargs)
     app.register_blueprint(routes, url_prefix=app.config.get('APPLICATION_ROOT'))
 
