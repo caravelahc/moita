@@ -1,4 +1,5 @@
 import config
+import flask
 import json
 import unittest
 
@@ -7,14 +8,15 @@ from app import moita
 
 class MoitaTestCase(unittest.TestCase):
     def setUp(self):
+        self.bucket = moita.s3.create_bucket('matrufsc_test')
+
         app = moita.create_app(**{
             'APPLICATION_ROOT': '',
-            'DATABASE': '_'.join([config.DATABASE, 'temporary']),
+            'AWS_BUCKET_NAME': 'matrufsc_test',
             'TESTING': True,
         })
 
         self.app = app.test_client()
-        self.database = moita.connection[app.config.get('DATABASE')].timetables
 
     def test_load_invalid_timetable(self):
         result = self.app.get('/load/123')
@@ -83,7 +85,9 @@ class MoitaTestCase(unittest.TestCase):
         self.assertDictEqual(payload, data)
 
     def tearDown(self):
-        self.database.drop()
+        for key in self.bucket.list():
+            key.delete()
+        moita.s3.delete_bucket('matrufsc_test')
 
 
 def run_tests():
