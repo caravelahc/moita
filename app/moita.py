@@ -16,19 +16,23 @@ map = flask.Blueprint('moita', __name__)
 s3 = boto.connect_s3()
 
 
-def download(filename):
-    key = s3key.Key(bucket)
-    key.key = '%s.json' % (filename,)
-    filedata = key.get_contents_as_string()
-    try:
+def make_key(filename):
+    return '%s.json' % (filename,)
+
+
+def download(bucket, filename):
+    key = bucket.get_key(make_key(filename))
+
+    if key is not None:
+        filedata = key.get_contents_as_string()
         return json.loads(filedata.decode('utf-8'))
-    except UnicodeError:
-        return None
+
+    return None
 
 
-def upload(filename, filedata):
+def upload(bucket, filename, filedata):
     key = s3key.Key(bucket)
-    key.key = '%s.json' % (filename,)
+    key.key = make_key(filename)
     key.set_contents_from_string(json.dumps(filedata), headers={
             'Content-Type': 'application/json',
     })
@@ -37,7 +41,7 @@ def upload(filename, filedata):
 
 @map.route('/load/<identifier>', methods=['GET'])
 def load_timetable(identifier):
-    payload = download(identifier)
+    payload = download(flask.g.bucket, identifier)
 
     if payload is None:
         flask.abort(404)
@@ -48,7 +52,7 @@ def load_timetable(identifier):
 @map.route('/store/<identifier>', methods=['PUT'])
 def store_timetable(identifier):
     data = flask.request.form.to_dict()
-    upload(identifier, data)
+    upload(flask.g.bucket, identifier, data)
 
     return '', 204
 
