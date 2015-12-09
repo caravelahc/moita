@@ -14,5 +14,5 @@ setuptools.setup(
     author_email='ranisalt@gmail.com',
     license='GNU Affero General Public License v3 or later',
     install_requires=read('requirements.txt'),
-    test_suite='app.tests'
+    test_suite='tests'
 )

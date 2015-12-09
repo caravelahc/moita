@@ -1,3 +1,3 @@
-from app import moita
+import moita
 
 application = moita.create_app()

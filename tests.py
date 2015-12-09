@@ -1,9 +1,7 @@
-import config
-import flask
 import json
 import unittest
 
-from app import moita
+import moita
 
 
 class MoitaTestCase(unittest.TestCase):

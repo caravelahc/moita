@@ -1,5 +1,4 @@
 import config
-
 import boto
 import boto.exception
 import boto.s3.bucket as s3bucket
@@ -33,7 +32,7 @@ def upload(bucket: s3bucket.Bucket, filename: str, filedata) -> s3key.Key:
     key = s3key.Key(bucket)
     key.key = make_key(filename)
     key.set_contents_from_string(json.dumps(filedata), headers={
-            'Content-Type': 'application/json',
+        'Content-Type': 'application/json',
     })
     return key
 
@@ -63,6 +62,12 @@ def store_timetable(identifier) -> (str, int):
 
 def create_app(**kwargs) -> flask.Flask:
     app.config.update(kwargs)
-    app.register_blueprint(routes, url_prefix=app.config.get('APPLICATION_ROOT'))
+    app.register_blueprint(routes,
+                           url_prefix=app.config.get('APPLICATION_ROOT'))
 
     return app
+
+
+if __name__ == '__main__':
+    application = create_app()
+    application.run()
