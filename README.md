@@ -12,12 +12,12 @@ Você pode ler a história e a motivação do CAPIM no repositório indicado pel
 link acima.
 
 Diferentemente do CAPIM, o MOITA é apenas uma API com endpoints de carregamento
-e armazenamento de [documentos](http://docs.mongodb.org/manual/core/document/).
-Isso permite que os arquivos, em sua maioria estáticos, sejam servidos por um
-servidor de alta performance (como o [Nginx](http://nginx.org/)), ao mesmo tempo
-que armazena os documentos em um banco de dados (como o
-[MongoDB](http://mongodb.org/)), possibilitando traçar estatísticas com estes
-dados de forma simples.
+e armazenamento de [documentos](http://www.json.org/). Isso permite que os
+arquivos, em sua maioria estáticos, sejam servidos por um servidor de alta
+performance (como o [Nginx](http://nginx.org/)), ao mesmo tempo que armazena os
+documentos em um serviço especializado (como o
+[Amazon S3](https://aws.amazon.com/s3/)), possibilitando traçar estatísticas com
+estes dados de forma simples.
 
 Detalhes
 ========
@@ -25,8 +25,8 @@ Construído do zero, o MOITA utiliza-se da licença [Affero GPL](LICENSE).
 
 O MOITA utiliza apenas Python 3, e é construído com o framework
 [Flask](https://github.com/mitsuhiko/flask), além de utilizar a extensão
-[pymongo](https://github.com/mongodb/mongo-python-driver) para manipular o banco
-de dados MongoDB, caso seja utilizado.
+[boto](https://github.com/boto/boto) para manipular o serviço de armazenamento
+Amazon S3, caso seja utilizado.
 
 Deploy
 ======
@@ -39,7 +39,7 @@ embora isso não seja recomendado pois este servidor não é feito para ambiente
 de produção, apenas para testes e desenvolvimento:
 
 ```sh
-./run.py
+python moita.py
 ```
 
 uWSGI + Nginx
@@ -49,11 +49,11 @@ O Flask segue a [PEP-333](https://www.python.org/dev/peps/pep-0333/), ou seja,
 subir um servidor. É simples:
 
 ```sh
-uwsgi -w wsgi -s :5000
+uwsgi -w moita:app -s :5000
 ```
 Ou, de forma mais explícita:
 ```sh
-uwsgi --wsgi-file wsgi.py --uwsgi-socket :5000
+uwsgi --wsgi moita:app --uwsgi-socket :5000
 ```
 Você pode utilizar uma porta diferente ou até mesmo um UNIX socket. Leia a
 [documentação](http://uwsgi-docs.readthedocs.org/en/latest/WSGIquickstart.html)
