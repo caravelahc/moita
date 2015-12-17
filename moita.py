@@ -64,10 +64,9 @@ def create_app(**kwargs) -> flask.Flask:
     app.config.update(kwargs)
     app.register_blueprint(routes,
                            url_prefix=app.config.get('APPLICATION_ROOT'))
-
     return app
 
 
-if __name__ == '__main__':
-    application = create_app()
-    application.run()
+if __name__ == '__main__':  # pragma: no cover
+    app = create_app()
+    app.run()
