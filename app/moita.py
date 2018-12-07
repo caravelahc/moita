@@ -1,38 +1,49 @@
-import errno
-import sys
-
 import flask
-import pymongo
-import pymongo.errors
+import sqlite3
 
-try:
-    connection = pymongo.MongoClient(connect=False)
-except pymongo.errors.ConnectionFailure:  # pragma: no cover
-    print('Error %d: connection to the database refused.' % errno.ECONNREFUSED,
-          file=sys.stderr)
-    sys.exit(errno.ECONNREFUSED)
+from textwrap import dedent
+
+
+def initialize_db():
+    db = sqlite3.connect('matrufsc.db')
+    db.execute(
+        dedent('''\
+            create table if not exists schedules (
+                id text primary key,
+                json_data text
+            );
+        ''')
+    )
+
 
 map = flask.Blueprint('moita', __name__)
 
 
 @map.route('/load/<identifier>', methods=['GET'])
 def load_timetable(identifier):
-    payload = connection[
-        flask.current_app.config['DATABASE']].timetables.find_one(identifier)
+    with sqlite3.connect('matrufsc.db') as db:
+        query = dedent('''\
+            select json_data
+            from schedules
+            where id = ?
+        ''')
+        result, *_ = db.execute(query, (identifier, ))
 
-    if payload is None:
-        flask.abort(404)
-
-    del payload['_id']
-    return flask.jsonify(**payload), 200
+    return result[0], 200
 
 
 @map.route('/store/<identifier>', methods=['PUT'])
 def store_timetable(identifier):
     data = flask.request.get_json()
-    data['_id'] = identifier
 
-    connection[flask.current_app.config['DATABASE']].timetables.save(data)
+    with sqlite3.connect('matrufsc.db') as db:
+        db.execute(
+            dedent('''\
+                insert or replace into schedules(id, json_data)
+                values (?, ?)
+            '''),
+            (identifier, str(data))
+        )
 
     return '', 204
 

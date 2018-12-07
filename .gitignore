@@ -78,3 +78,6 @@ pip-selfcheck.json
 ## File-based project format:
 *.ipr
 *.iws
+
+### Custom ###
+*.db
