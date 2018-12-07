@@ -75,4 +75,9 @@ def create_app(**kwargs):
 
     app.register_blueprint(map, url_prefix=app.config.get('APPLICATION_ROOT'))
 
+    initialize_db()
+
     return app
+
+
+application = create_app()
