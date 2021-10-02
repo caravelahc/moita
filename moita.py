@@ -79,7 +79,7 @@ def store_timetable(identifier):
 def create_app(**kwargs):
     load_dotenv(".env")
     app = flask.Flask(__name__)
-    app.register_blueprint(map, url_prefix=os.getenv("APP_ROOT"))
+    app.register_blueprint(map, url_prefix="/")
     initialize_db()
     return app
 
