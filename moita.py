@@ -4,6 +4,7 @@ import sqlite3
 
 from dotenv import load_dotenv
 from textwrap import dedent
+from flask_cors import CORS
 
 
 def initialize_db():
@@ -71,5 +72,10 @@ def create_app(**kwargs):
 
 if __name__ == "__main__":
     app = create_app()
+    origins = os.getenv("CORS_ACCEPTED_ORIGIN")
+    cors = CORS(
+        app,
+        resources={r"/*": {"origins": origins}},
+    )
     debug = os.getenv("FLASK_ENV") == "development"
     app.run(os.getenv("APP_HOST", "localhost"), os.getenv("APP_PORT", "8001"), debug)
